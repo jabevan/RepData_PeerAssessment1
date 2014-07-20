@@ -1,18 +1,13 @@
----
-title: "Assisgnment 1"
-author: "Joshua Bevan"
-date: "July 19, 2014"
-output:
-  html_document:
-    keep_md: yes
----
+# Assisgnment 1
+Joshua Bevan  
+July 19, 2014  
 
 # Reproducible Research: Peer Assessment 1
 
 ## Loading and Preprocessing the Data:
 
-```{r, echo=TRUE}
 
+```r
 # Loads File
 
 temp <- tempfile()
@@ -34,13 +29,12 @@ stepsday <- aggregate(steps ~ date, data, sum)
 
 stepsint <- aggregate(steps ~ interval, data, mean)
 names(stepsint) <- sub("^steps$", "avgsteps", names(stepsint))
-
 ```
 
 ## What is Mean Total Number of Steps Taken Per Day?
 
-```{r, echo=TRUE}
 
+```r
 # The following function checks to see if the "ggplot2" package is installed, and installs it if it is not.
 
 pkgLoad <- function(x)
@@ -54,13 +48,27 @@ pkgLoad <- function(x)
   }
   
   pkgLoad("ggplot2")
+```
 
+```
+## Loading required package: ggplot2
+```
+
+```r
 # Creates the histogram displaying how many days a given number of steps were taken.
 # See discussion here: https://class.coursera.org/repdata-004/forum/thread?thread_id=29
 
 library(ggplot2)
 ggplot(stepsday, aes(x=steps)) + geom_histogram()+ xlab("total steps taken") + ylab("number of days steps were taken")
+```
 
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
+
+![plot of chunk unnamed-chunk-2](./PA1_template_files/figure-html/unnamed-chunk-2.png) 
+
+```r
 # Calculates Mean Steps Per Day
 
 stepsmean <- mean(stepsday$steps)
@@ -68,19 +76,22 @@ stepsmean <- mean(stepsday$steps)
 # Calculates Median Steps Per Day
 
 stepsmedian <- median(stepsday$steps)
-
 ```
 
-##### The **_mean_** total number of steps taken is **`r stepsmean`**.  The **_median_** total number of steps taken is **`r stepsmedian`**.
+##### The **_mean_** total number of steps taken is **1.0766 &times; 10<sup>4</sup>**.  The **_median_** total number of steps taken is **1.0765 &times; 10<sup>4</sup>**.
 
 ## What is the Average Daily Activity Pattern?
 
-```{r, echo=TRUE}
 
+```r
 # Creates the Time Series Plot
 
 ggplot(stepsint, aes(interval, avgsteps)) + geom_line() + xlab("5-minute interval") + ylab("average number of steps taken, averaged across all days")
+```
 
+![plot of chunk unnamed-chunk-3](./PA1_template_files/figure-html/unnamed-chunk-3.png) 
+
+```r
 # Find Max Number of Average Steps
 
 maxint <- stepsint[stepsint$avgsteps == max(stepsint$avgsteps),]
@@ -89,19 +100,24 @@ maxavgsteps <- maxint$avgsteps
 # Report Interval with Max Number of Average Steps
 
 maxavgint <- maxint$interval
-
 ```
 
-##### The most number of steps take is **_`r maxavgsteps`_** in the **_`r maxavgint`_** interval.
+##### The most number of steps take is **_206.1698_** in the **_835_** interval.
 
 ## Inputting Missing Values:
 
-```{r, echo=TRUE}
 
+```r
 # Number of Missing Values in Original Data
 
 sum(is.na(data))
+```
 
+```
+## [1] 2304
+```
+
+```r
 # Replace NA with Average Steps for Interval
 
 NoNA <- data
@@ -114,7 +130,15 @@ NoNAstepsday <- aggregate(steps ~ date, NoNA, sum)
 # Creates the histogram displaying how many days a given number of steps were taken (NoNA).
 
 ggplot(NoNAstepsday, aes(x=steps)) + geom_histogram()+ xlab("total steps taken (NoNA)") + ylab("number of days steps were taken")
+```
 
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
+
+![plot of chunk unnamed-chunk-4](./PA1_template_files/figure-html/unnamed-chunk-4.png) 
+
+```r
 # Calculates Mean Steps Per Day (NoNA)
 
 stepsmeanNoNA <- mean(NoNAstepsday$steps)
@@ -122,19 +146,24 @@ stepsmeanNoNA <- mean(NoNAstepsday$steps)
 # Calculates Median Steps Per Day (NoNA)
 
 stepsmedianNoNA <- median(NoNAstepsday$steps)
-
 ```
 
-##### The **_mean_** total number of steps taken (*NoNA*) is **`r stepsmeanNoNA`**.  The **_median_** total number of steps taken (*NoNA*) is **`r stepsmedianNoNA`**.  By replacing NA values with the average for the given interval, the **_mean_** and **_median_** numbers reverted to the average.
+##### The **_mean_** total number of steps taken (*NoNA*) is **1.0766 &times; 10<sup>4</sup>**.  The **_median_** total number of steps taken (*NoNA*) is **1.0766 &times; 10<sup>4</sup>**.  By replacing NA values with the average for the given interval, the **_mean_** and **_median_** numbers reverted to the average.
 
 ## Are There Differences in Activity Patterns Between Weekdays and Weekends?
 
-```{r, echo=TRUE}
 
+```r
 # The following function checks to see if the "timeDate" package is installed, and installs it if it is not.
   
   pkgLoad("timeDate")
+```
 
+```
+## Loading required package: timeDate
+```
+
+```r
 # Creates Weekday Data
 
 NoNAwd <- NoNA[isWeekday(NoNA$date),]
@@ -210,5 +239,10 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 }
 
 multiplot(p1, p2, cols=1)
+```
 
 ```
+## Loading required package: grid
+```
+
+![plot of chunk unnamed-chunk-5](./PA1_template_files/figure-html/unnamed-chunk-5.png) 
